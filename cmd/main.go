@@ -2,13 +2,12 @@ package cmd
 
 import (
 	"os"
-	"strings"
 
 	"github.com/spf13/cobra"
-	"github.com/spf13/viper"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 
+	"github.com/martinsrso/service-price/config"
 	restCmd "github.com/martinsrso/service-price/rest/cmd"
 )
 
@@ -69,29 +68,10 @@ func initLogger(logLevel string) {
 }
 
 func initPreRun(cmd *cobra.Command, args []string) {
-	config := getConfig()
+	config := config.GetConfig(cfgFile)
 	logLevel := config.GetString("log.level")
 
 	initLogger(logLevel)
 
 	zap.S().Info("start service-price config")
-}
-
-func getConfig() *viper.Viper {
-	config := viper.New()
-
-	if cfgFile != "" {
-		config.SetConfigFile(cfgFile)
-	}
-	config.SetConfigType("yaml")
-	config.AddConfigPath(".")
-	config.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
-	config.AutomaticEnv()
-
-	// If a config file is found, read it in.
-	if err := config.ReadInConfig(); err != nil {
-		zap.S().Panicf("config file %s failed to load: %s.\n", cfgFile, err.Error())
-	}
-
-	return config
 }

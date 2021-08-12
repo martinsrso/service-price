@@ -8,13 +8,15 @@ import (
 	"github.com/spf13/viper"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
+
+	restCmd "github.com/martinsrso/service-price/rest/cmd"
 )
 
 var rootCmd = &cobra.Command{}
 
 var (
-	cfgFile string
-	// restCommandFunc = restCmd.MainCommand
+	cfgFile         string
+	restCommandFunc = restCmd.MainCommand
 	// dbCommandFunc   = dbCmd.MainCommand
 	// grpcCommandFunc = grpcCmd.MainCommand
 )
@@ -32,15 +34,15 @@ func RootCommand() *cobra.Command {
 		&cfgFile,
 		"config",
 		"config/default.yaml",
-		"config file (default is service-price/config/default.yaml)",
+		"",
 	)
-	/* rootCommand.AddCommand(restCommandFunc())
-	rootCommand.AddCommand(dbCommandFunc())
+	rootCommand.AddCommand(restCommandFunc())
+	/* rootCommand.AddCommand(dbCommandFunc())
 	rootCommand.AddCommand(grpcCommandFunc()) */
 	return rootCommand
 }
 
-func initRun(cmdd *cobra.Command, args []string) {
+func initRun(cmd *cobra.Command, args []string) {
 	zap.S().Info("teste")
 }
 
@@ -66,7 +68,7 @@ func initLogger(logLevel string) {
 	zap.ReplaceGlobals(logger)
 }
 
-func initPreRun(cmdd *cobra.Command, args []string) {
+func initPreRun(cmd *cobra.Command, args []string) {
 	config := getConfig()
 	logLevel := config.GetString("log.level")
 

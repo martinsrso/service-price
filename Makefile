@@ -75,8 +75,8 @@ lint:
 lint-comments:
 	$(GO) list ./... | grep -v /vendor/ | xargs -L1 $(GOLINT) -set_exit_status
 
-.PHONY: vendors
-vendors:
+.PHONY: vendor
+vendor:
 	$(GOMOD) vendor
 	$(GOMOD) tidy
 
